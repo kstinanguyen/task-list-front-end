@@ -1,4 +1,5 @@
 import TaskList from './components/TaskList.jsx';
+import NewTaskForm from './components/NewTaskForm.jsx';
 import './App.css';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -12,7 +13,6 @@ const convertFromApi = (apiTask) => {
     description: apiTask.description,
     isComplete: apiTask.is_complete,
   };
-
   delete newTask.is_complete;
   return newTask;
 };
@@ -39,7 +39,6 @@ const unregisterTaskApi = (id) => {
 const updateCompleteTaskApi = (id) => {
   return axios.patch(`${kBaseUrl}/tasks/${id}/mark_complete`)
     .then(response => {
-      console.log(response.data);
       return response.data.task;
     })
     .catch(error => {
@@ -50,7 +49,6 @@ const updateCompleteTaskApi = (id) => {
 const updateIncompleteTaskApi = (id) => {
   return axios.patch(`${kBaseUrl}/tasks/${id}/mark_incomplete`)
     .then(response => {
-      console.log(response.data);
       return response.data.task;
     })
     .catch(error => {
@@ -104,6 +102,16 @@ const App = () => {
       });
   };
 
+  const handleOnSubmit = (taskData) => {
+    axios.post(`${kBaseUrl}/tasks`, taskData)
+      .then((result) => {
+        setTaskData((prevTasks) => [convertFromApi(result.data.task), ...prevTasks]);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -114,8 +122,10 @@ const App = () => {
           <TaskList
             tasks={taskData}
             onCompleteTask={handleTask}
-            onRemoveTask={handleRemoveTask} />
+            onRemoveTask={handleRemoveTask}
+          />
         </div>
+        <NewTaskForm handleOnSubmit={handleOnSubmit}/>
       </main>
     </div>
   );

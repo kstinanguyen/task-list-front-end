@@ -36,18 +36,8 @@ const unregisterTaskApi = (id) => {
     });
 };
 
-const updateCompleteTaskApi = (id) => {
-  return axios.patch(`${kBaseUrl}/tasks/${id}/mark_complete`)
-    .then(response => {
-      return response.data.task;
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-const updateIncompleteTaskApi = (id) => {
-  return axios.patch(`${kBaseUrl}/tasks/${id}/mark_incomplete`)
+const updateCompleteTaskApi = (id , isTaskCompleted) => {
+  return axios.patch(`${kBaseUrl}/tasks/${id}/${isTaskCompleted ? 'mark_complete' :'mark_incomplete'}`)
     .then(response => {
       return response.data.task;
     })
@@ -73,16 +63,6 @@ const App = () => {
   const handleTask = (id) => {
     const taskToUpdate = taskData.find(task => task.id === id);
     updateCompleteTaskApi(id, !taskToUpdate.isComplete)
-      .then(() => {
-        const newTaskData = taskData.map(task => {
-          if (task.id === id) {
-            return { ...task, isComplete: !task.isComplete };
-          }
-          return task;
-        });
-        setTaskData(newTaskData);
-      });
-    updateIncompleteTaskApi(id, !taskToUpdate.isComplete)
       .then(() => {
         const newTaskData = taskData.map(task => {
           if (task.id === id) {

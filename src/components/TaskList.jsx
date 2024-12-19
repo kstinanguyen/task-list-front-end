@@ -4,7 +4,7 @@ import './TaskList.css';
 
 const TaskList = ({ tasks, onCompleteTask, onRemoveTask }) => {
   const getTaskListJSX = (tasks) => {
-    return tasks.map((task) => {
+    return tasks.sort((task1, task2) => task1.id - task2.id).map(task => {
       return (
         <Task
           key={task.id}
@@ -17,6 +17,7 @@ const TaskList = ({ tasks, onCompleteTask, onRemoveTask }) => {
       );
     });
   };
+
   return <ul className="tasks__list no-bullet">{getTaskListJSX(tasks)}</ul>;
 };
 

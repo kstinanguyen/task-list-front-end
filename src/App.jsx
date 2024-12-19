@@ -22,6 +22,7 @@ const getAllTasksApi = () => {
     .then(response => {
       const apiTask = response.data;
       const newTasks = apiTask.map(convertFromApi);
+      console.log(response.data);
       return newTasks;
     })
     .catch(error => {
